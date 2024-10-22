@@ -1,0 +1,37 @@
+<icecast>
+  <!-- Listen settings for Icecast server -->
+  <listen-socket>
+      <port>8000</port> <!-- Default listening port -->
+  </listen-socket>
+  <hostname>localhost</hostname>
+
+  <authentication>
+    <!-- Sources log in with username 'source' -->
+    <source-password>SOURCE_PASSWORD</source-password>
+    <!-- Relays log in username 'relay' -->
+    <relay-password>RELAY_PASSWORD</relay-password>
+
+    <!-- Admin logs in with the username given below -->
+    <admin-user>admin</admin-user>
+    <admin-password>ADMIN_PASSWORD</admin-password>
+  </authentication>
+
+  <limits>
+    <clients>200</clients>
+    <sources>5</sources>
+  </limits>
+
+  <!-- Paths for log files -->
+  <paths>
+    <logdir>/var/log/icecast</logdir>
+    <webroot>/usr/share/icecast/web</webroot>
+    <adminroot>/usr/share/icecast/admin</adminroot>
+    <alias source="/" dest="/status.xsl"/>
+  </paths>
+
+  <!-- location and admin are two arbitrary strings that are e.g. visible
+       on the server info page of the icecast web interface
+       (server_version.xsl). -->
+  <location>NO</location>
+  <admin>teknisk@studentmediene.no</admin>
+</icecast>
