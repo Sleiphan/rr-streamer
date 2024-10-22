@@ -6,14 +6,13 @@ RELAY_PASSWORD_PLACEHOLDER="RELAY_PASSWORD"
 
 ICECAST_CONFIG_FILE='./rr-icecast.xml'
 
-echo -e "\n\n### Welcome to Radio Revolt's setup script for Icecast! ###\n\n\
+echo -e "\n\n### Welcome to Radio Revolt's setup script for Icecast! ###\n\
+This script will install, configure, and get the icecast server running for you!\n\n\
 Since storing passwords in a git repository is something that only knobheads do,\n\
-I will only need you to give me three passwords:\n\n\
-  # Admin password: A password that the admins (Teknisk) will use to login to the server with administrator privileges.\n\n\
-  # Source password: Password that listener software (like radiorevolt.no) will use to access the audio streams.\n\n\
-  # Relay password: A password that relay Icecast servers will use to relay the streams from this server. If you are not using any Icecast relays, just enter some gibberish.\n\n\n\n\
-To actually start the icecast server, use the following command:\n\
-    su -s /bin/sh -c \"icecast -c /rr-icecast.xml\" icecast\n\n\
+I will need you to give me three passwords:\n\n\
+  # Admin password: A password that the admins (Teknisk) will use to login to the server with administrator privileges.\n\
+  # Source password: Password that listener software (like radiorevolt.no) will use to access the audio streams.\n\
+  # Relay password: A password that relay Icecast servers will use to relay the streams from this server. If you are not using any Icecast relays, just enter some gibberish.\n\n\
 Happy broadcasting!\n"
 
 if [ ! -f "${ICECAST_CONFIG_FILE}" ]; then
