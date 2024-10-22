@@ -1,11 +1,8 @@
 #!/bin/sh
-
 ADMIN_PASSWORD_PLACEHOLDER="ADMIN_PASSWORD"
 SOURCE_PASSWORD_PLACEHOLDER="SOURCE_PASSWORD"
 RELAY_PASSWORD_PLACEHOLDER="RELAY_PASSWORD"
-
 ICECAST_CONFIG_FILE="./rr-icecast.xml"
-
 echo -e "\n\n### Welcome to Radio Revolt's setup script for Icecast! ###\n\
 This script will install, configure, and get the icecast server running for you!\n\n\
 Since storing passwords in a git repository is something that only knobheads do,\n\
