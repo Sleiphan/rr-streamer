@@ -40,12 +40,4 @@ sed -i "s|${SOURCE_PASSWORD_PLACEHOLDER}|${SOURCE_PASSWORD}|g" ${ICECAST_CONFIG_
 sed -i "s|${ADMIN_PASSWORD_PLACEHOLDER}|${ADMIN_PASSWORD}|g" ${ICECAST_CONFIG_FILE}
 sed -i "s|${RELAY_PASSWORD_PLACEHOLDER}|${RELAY_PASSWORD}|g" ${ICECAST_CONFIG_FILE}
 
-echo -e "All passwords set successsfully.\n"
-
-echo -e "Installing Icecast..."
-apk update && apk add icecast
-echo -e "DONE\n"
-
-echo -e "Starting icecast in the background..."
-su -s /bin/sh -c "nohup icecast -c ${ICECAST_CONFIG_FILE} > /dev/null 2>&1 &" icecast
-echo -e "DONE\n"
+echo -e "All passwords set successsfully."

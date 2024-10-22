@@ -70,7 +70,7 @@ If you are logged in as a non-root user, run this command instead:
 
 Icecast servers are used worldwide to deliver audio and video streams. The main reason being that Icecast is specialized and optimized for delivering these streams to millions of people. They are also more secure and reliable, mainly because of their limited scope of responsibility.
 
-## How to editi the configuration
+## How to edit the configuration
 
 To change the behaviour and variables used by the Icecast server, you must edit the file /rr-icecast.xml or whatever file you want to use as icecast configuration.
 
