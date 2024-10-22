@@ -8,17 +8,17 @@ RELAY_PASSWORD_PLACEHOLDER="RELAY_PASSWORD"
 
 # Check if environment variables are set
 if [ -z "$ADMIN_PASSWORD" ]; then
-  echo "Error: ADMIN_PASSWORD is not set."
+  echo "Error: ADMIN_PASSWORD is not set. Set it using the option -e, e.g. \"docker run -it ... -e ADMIN_PASSWORD="password"\" ..."
   exit 1
 fi
 
 if [ -z "$SOURCE_PASSWORD" ]; then
-  echo "Error: SOURCE_PASSWORD is not set."
+  echo "Error: SOURCE_PASSWORD is not set. Set it using the option -e, e.g. \"docker run -it ... -e SOURCE_PASSWORD="password"\" ..."
   exit 1
 fi
 
 if [ -z "$RELAY_PASSWORD" ]; then
-  echo "Error: RELAY_PASSWORD is not set."
+  echo "Error: RELAY_PASSWORD is not set. Set it using the option -e, e.g. \"docker run -it ... -e RELAY_PASSWORD="password"\" ..."
   exit 1
 fi
 
