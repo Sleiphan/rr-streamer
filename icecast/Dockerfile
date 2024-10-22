@@ -1,10 +1,14 @@
 FROM alpine:latest AS base
 
+RUN mkdir /rr-icecast
+WORKDIR /rr-icecast
+
 # Copy relevant files
-COPY ./* /
+COPY ./* /rr-icecast
 
 # Make the setup script executable
-RUN chmod +x /setup-icecast.sh
+RUN chmod +x ./setup-icecast.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 # Install icecast
 RUN apk update && apk add icecast
@@ -13,7 +17,4 @@ RUN apk update && apk add icecast
 EXPOSE 8000
 
 # Make the icecast server run as soon as the container starts
-ENTRYPOINT [ "su", "-s", "/bin/sh", "-c", "icecast -c /rr-icecast.xml", "icecast" ]
-
-# A copy of the entrypoint command:
-# su -s /bin/sh -c 'icecast -c rr-icecast.xml' icecast
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
