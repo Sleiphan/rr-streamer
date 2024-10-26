@@ -31,11 +31,6 @@ sed -i "s|${SOURCE_PASSWORD_PLACEHOLDER}|${SOURCE_PASSWORD}|g" ${ICECAST_CONFIG_
 sed -i "s|${ADMIN_PASSWORD_PLACEHOLDER}|${ADMIN_PASSWORD}|g" ${ICECAST_CONFIG_FILE}
 sed -i "s|${RELAY_PASSWORD_PLACEHOLDER}|${RELAY_PASSWORD}|g" ${ICECAST_CONFIG_FILE}
 
-# Start icecast
-echo -e "Starting icecast in the background..."
-${ICECAST_START_COMMAND}
-echo -e "DONE\n"
-
 # Make icecast start on boot
 echo -e "Making icecast start when the system boots up ..."
 echo "${ICECAST_START_COMMAND}" > ${ICECAST_STARTUP_FILE}   # Create the startup file
@@ -47,4 +42,10 @@ echo -e "DONE\n"
 ln -s ${ICECAST_CONFIG_FILE} ./icecast.xml
 ln -s ${ICECAST_STARTUP_FILE} ./start_rr_icecast.start
 
+# Start icecast
+echo -e "Starting icecast in the background..."
+./start_rr_icecast.start
+echo -e "DONE\n"
+
+# Done!
 echo -e "Successfully installed Radio Revolt's Icecast server!"
