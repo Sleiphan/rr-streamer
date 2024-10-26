@@ -57,7 +57,10 @@ ${ICECAST_START_COMMAND}
 echo -e "DONE\n"
 
 echo -e "Making icecast start when the system boots up ..."
+# mkdir /etc/local.d
 echo "${ICECAST_START_COMMAND}" > /etc/local.d/start_rr_icecast.start
+chmod +x /etc/local.d/start_rr_icecast.start
+# echo "::sysinit:/etc/init.d/local start" >> /etc/inittab
 echo -e "DONE\n"
 
 echo -e "Successfully installed Radio Revolt's Icecast server!"
