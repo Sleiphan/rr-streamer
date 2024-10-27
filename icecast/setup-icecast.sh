@@ -22,11 +22,12 @@ read RELAY_PASSWORD
 
 # Install dependencies
 echo -e "Installing dependencies ..."
-apk update && apk add curl icecast > /dev/null
+apk update > /dev/null
+apk add curl icecast > /dev/null
 echo -e "DONE\n"
 
 # Download config file
-curl -L -o ${ICECAST_CONFIG_FILE} ${ICECAST_CONFIG_FILE_URL} > /dev/null
+curl -L -o ${ICECAST_CONFIG_FILE} ${ICECAST_CONFIG_FILE_URL} > /dev/null 2>&1
 
 # Insert passwords into config file
 sed -i "s|${SOURCE_PASSWORD_PLACEHOLDER}|${SOURCE_PASSWORD}|g" ${ICECAST_CONFIG_FILE}
