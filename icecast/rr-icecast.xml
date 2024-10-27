@@ -1,9 +1,15 @@
 <icecast>
   <!-- Listen settings for Icecast server -->
   <listen-socket>
-      <port>8000</port> <!-- Default listening port -->
+    <port>8000</port>
+    <bind-address>0.0.0.0</bind-address> <!-- IPv4 -->
   </listen-socket>
-  <hostname>localhost</hostname>
+  <listen-socket>
+    <port>8000</port>
+    <bind-address>::</bind-address> <!-- IPv6 -->
+  </listen-socket>
+
+  <hostname>direkte.radiorevolt.no</hostname>
 
   <authentication>
     <!-- Sources log in with username 'source' -->
