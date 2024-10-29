@@ -3,8 +3,9 @@
 ICECAST_HOST = "ICECAST_HOSTNAME_PLACEHOLDER"
 ICECAST_PORT = ICECAST_PORT_PLACEHOLDER
 ICECAST_PASSWORD_SOURCE = "SOURCE_PASSWORD_PLACEHOLDER"
-PATH_PROMOER = "/var/cache/liquidsoap/file-server/radio-promoer"
-PATH_REPRISER = "/var/cache/liquidsoap/file-server/radio-repriser"
+PATH_PROMOER = "/mnt/liquidsoap/promoer"
+PATH_REPRISER = "/mnt/liquidsoap/repriser"
+PATH_NATTMUSIKK = "/mnt/liquidsoap/nattmusikk"
 
 # Skriv loggen ut til stdout, så den havner i SystemD sin journal
 set("log.file", false)
@@ -12,23 +13,27 @@ set("log.stdout", true)
 
 
 
-# Dette er hvor promoene kommer fra. De velges tilfeldig fra den følgende mappen.
+# Dette er hvor promoene kommer fra.
 promoer_playlist = playlist(PATH_PROMOER, mode="random")
 
-# Dette er hvor reprisene kommer fra. De velges tilfeldig fra den følgende mappen.
+# Dette er hvor reprisene kommer fra.
 repriser_playlist = playlist(PATH_REPRISER, mode="random")
 
-# Switch to filler clips at the 29th minute of every hour and return to playback after 1 minute
-playback = switch(track_sensitive=false, [({0h29m}, promoer_playlist), ({0h30m}, repriser_playlist)])
+# Dette er hvor nattmusikken kommer fra.
+nattmusikk_playlist = playlist(PATH_NATTMUSIKK, mode="random")
 
-# For some odd reason, we have to wrap 'playback' in an extra make-safe call before being able to send it to an output.
-# playback = audio_to_stereo(playback)
-# playback = mksafe(playback)
+
+
+stream = switch([
+    ({0h-7h}, nattmusikk_playlist),
+    ({29m-30m}, promoer_playlist),
+    ({true}, repriser_playlist)
+], track_sensitive=false)
 
 
 
 # Common parameters for all streams
-icecast_common_source = playback                                            # The audio that is streamed to icecast
+icecast_common_source = stream                                              # The audio that is streamed to icecast
 icecast_common_host = ICECAST_HOST                                          # Icecast server host
 icecast_common_port = ICECAST_PORT                                          # Icecast server port
 icecast_common_password = ICECAST_PASSWORD_SOURCE                           # Icecast mount point password

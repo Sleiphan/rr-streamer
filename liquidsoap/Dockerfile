@@ -8,7 +8,7 @@ FROM savonet/liquidsoap:9ab21ac AS base
 WORKDIR /var/cache/liquidsoap
 
 # Create folders for playback and promotion audio files.
-RUN mkdir -p /var/cache/liquidsoap/file-server/radio-promoer /var/cache/liquidsoap/file-server/radio-repriser
+# RUN mkdir -p /var/cache/liquidsoap/file-server/radio-promoer /var/cache/liquidsoap/file-server/radio-repriser
 
 # Copy relevant files to their proper destinations
 COPY rr-liquidsoap.liq /var/cache/liquidsoap/
@@ -21,16 +21,16 @@ USER root
 RUN chmod +x docker-entrypoint.sh
 
 # Install file server software. In this case, we use 'samba' since it is a gold standard.
-RUN apt update && apt install -y samba
+# RUN apt update && apt install -y samba
 
 # Copy the file server configuration to the image
-COPY smb.conf /etc/samba/smb.conf
+# COPY smb.conf /etc/samba/smb.conf
 
 # Switch back to the user 'liquidsoap', as the base image originally intended.
 USER liquidsoap
 
 # -p 139:139 -p 445:445
-EXPOSE 139 445
+# EXPOSE 139 445
 
 # Make all containers generated from this image run the startup script.
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
