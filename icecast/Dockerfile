@@ -4,10 +4,12 @@ RUN mkdir /rr-icecast
 WORKDIR /rr-icecast
 
 # Copy relevant files
-COPY ./* /rr-icecast
+COPY ./docker-entrypoint.sh ./rr-icecast.xml /rr-icecast/
+
+# Enforce unix line endings
+RUN dos2unix ./*
 
 # Make the setup script executable
-RUN chmod +x ./setup-icecast.sh
 RUN chmod +x ./docker-entrypoint.sh
 
 # Install icecast
