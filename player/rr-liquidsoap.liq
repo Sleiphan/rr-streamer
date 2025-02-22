@@ -15,13 +15,13 @@ set("log.stdout", true)
 
 
 # Dette er hvor promoene kommer fra.
-# promoer_playlist = playlist(PATH_PROMOER, mode="random")
+promoer_playlist = playlist(PATH_PROMOER, mode="random")
 
 # Dette er hvor reprisene kommer fra.
 repriser_playlist = playlist(PATH_REPRISER, mode="random")
 
 # Dette er hvor nattmusikken kommer fra.
-# nattmusikk_playlist = playlist(PATH_NATTMUSIKK, mode="random")
+nattmusikk_playlist = playlist(PATH_NATTMUSIKK, mode="random")
 
 
 
