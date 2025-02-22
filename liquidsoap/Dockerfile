@@ -1,5 +1,4 @@
-# In short, this Dockerfile just adds a file server capability to the ready made Liquidsoap image.
-# This makes it easy to edit the selection of audio files which Liquidsoap can choose from.
+# In short, this Dockerfile just adds the liquidsoap configuration and startup script (entrypoint) to the container.
 
 # Enforce line endings in 
 FROM debian:latest AS format

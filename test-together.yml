@@ -2,22 +2,23 @@ services:
   icecast:
     build:
       context: ./icecast/
-    restart: unless-stopped
     environment:
-      ADMIN_PASSWORD: passwd
-      SOURCE_PASSWORD: passwd
-      RELAY_PASSWORD: passwd
+      ADMIN_PASSWORD: hackme
+      SOURCE_PASSWORD: hackme
+      RELAY_PASSWORD: hackme
     ports:
-      - "8000:8000"
+      - 8000:8000
   liquidsoap:
     build:
       context: ./liquidsoap/
-    restart: unless-stopped
     environment:
-      SOURCE_PASSWORD: passwd
+      SOURCE_PASSWORD: hackme
       ICECAST_HOSTNAME: icecast
       ICECAST_PORT: 8000
-    volumes:
-      - soundfiles:/mnt/liquidsoap
-volumes:
-  soundfiles:
+      MOUNTPOINT_PASSWORD: hackme
+    ports:
+      - 8080-8085:8080-8085
+    # volumes:
+    #   - soundfiles:/mnt/liquidsoap
+# volumes:
+#   soundfiles:
