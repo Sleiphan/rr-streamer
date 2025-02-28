@@ -12,6 +12,7 @@ ICECAST_HOST = "ICECAST_HOSTNAME_PLACEHOLDER"
 ICECAST_PORT = ICECAST_PORT_PLACEHOLDER
 ICECAST_PASSWORD_SOURCE = "SOURCE_PASSWORD_PLACEHOLDER"
 MOUNTPOINT_PASSWORD = "MOUNTPOINT_PASSWORD_PLACEHOLDER"
+PATH_NATTMUSIKK = "/mnt/liquidsoap/nattmusikk"
 
 
 
@@ -42,6 +43,23 @@ live = add([
     live_4,
     live_5
 ], normalize=false)
+
+
+
+# Third, setup royalty-free music to play at night
+
+nattmusikk = playlist(PATH_NATTMUSIKK, mode="random")
+nattmusikk = switch([
+    ({7h-0h}, nattmusikk),
+    ({true}, blank())
+], track_sensitive=false)
+
+
+
+# Fourth, mix in 'nattmusikk' to the stream as a fallback. This allows for the royalty-free music to
+# be overwritten by live broadcasts at night.
+
+live = fallback(track_sensitive=false, [live, nattmusikk])
 
 
 

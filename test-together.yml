@@ -18,17 +18,17 @@ services:
       MOUNTPOINT_PASSWORD: hackme
     ports:
       - 8080-8085:8080-8085
-    # volumes:
-    #   - soundfiles:/mnt/liquidsoap
-  player:
-    build:
-      context: ./player/
-    environment:
-      SOURCE_PASSWORD: hackme
-      ICECAST_HOSTNAME: liquidsoap
-      ICECAST_PORT: 8080
-      ICECAST_MOUNT_POINT: liquidsoap_0
     volumes:
       - C:/Users/hfred/Desktop/data:/mnt/liquidsoap
+#   player:
+#     build:
+#       context: ./player/
+#     environment:
+#       SOURCE_PASSWORD: hackme
+#       ICECAST_HOSTNAME: liquidsoap
+#       ICECAST_PORT: 8080
+#       ICECAST_MOUNT_POINT: liquidsoap_0
+#     volumes:
+#       - C:/Users/hfred/Desktop/data:/mnt/liquidsoap
 # volumes:
 #   soundfiles:
