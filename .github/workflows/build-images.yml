@@ -33,17 +33,25 @@ jobs:
       run: docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/
 
     - name: Login to Github Container Registry (ghcr.io)
-      if: ${{ github.event_name != 'pull_request' }}
+      if: github.event_name != 'pull_request'
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} ghcr.io --password-stdin
       
     - name: Push images to ghcr.io
-      if: ${{ github.event_name != 'pull_request' }}
+      if: github.event_name != 'pull_request'
       run: |
         docker push ${{ env.TAG_ICECAST }}
         docker push ${{ env.TAG_LIQUIDSOAP }}
-
+    
+    # Install the cosign tool except on PR
+    # https://github.com/sigstore/cosign-installer
+    - name: Install cosign
+      if: github.event_name != 'pull_request'
+      uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
+      with:
+        cosign-release: 'v2.2.4'
+    
     - name: Sign the published Docker image
-      if: ${{ github.event_name != 'pull_request' }}
+      if: github.event_name != 'pull_request'
       env:
         TAGS: |
           ${{ env.TAG_ICECAST }}
