@@ -31,7 +31,9 @@ jobs:
       
     - name: Push images to ghcr.io
       if: ${{ github.event_name != 'pull_request' }}
-      run: docker push ${{ env.TAG_ICECAST }} ${{ env.TAG_LIQUIDSOAP }}
+      run: |
+        docker push ${{ env.TAG_ICECAST }}
+        docker push ${{ env.TAG_LIQUIDSOAP }}
 
     - name: Sign the published Docker image
       if: ${{ github.event_name != 'pull_request' }}
