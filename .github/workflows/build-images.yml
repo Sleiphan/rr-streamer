@@ -30,11 +30,14 @@ jobs:
       run: |
         docker build -t ${{ env.TAG_ICECAST }} icecast/ > digest.txt
         echo "digest=$(cat digest.txt)" > $GITHUB_OUTPUT
+        echo $GITHUB_OUTPUT
+        
     - name: Build the Liquidsoap image
       id: build_liquidsoap
       run: |
         docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/ > digest.txt
         echo "digest=$(cat digest.txt)" > $GITHUB_OUTPUT
+        echo $GITHUB_OUTPUT
 
     - name: Login to Github Container Registry (ghcr.io)
       if: github.event_name != 'pull_request'
