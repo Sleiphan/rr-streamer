@@ -27,7 +27,7 @@ jobs:
 
     - name: Login to Github Container Registry (ghcr.io)
       if: ${{ github.event_name != 'pull_request' }}
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} ghcr.io
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} ghcr.io --password-stdin
       
     - name: Push images to ghcr.io
       if: ${{ github.event_name != 'pull_request' }}
