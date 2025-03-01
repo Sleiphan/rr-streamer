@@ -1,0 +1,47 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  TAG_ICECAST: ghcr.io/sleiphan/rr-streamer/icecast:latest
+  TAG_LIQUIDSOAP: ghcr.io/sleiphan/rr-streamer/liquidsoap:latest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build the Icecast image
+      id: build_icecast
+      run: docker build -t ${{ env.TAG_ICECAST }} icecast/
+    - name: Build the Liquidsoap image
+      id: build_liquidsoap
+      run: docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/
+
+    - name: Login to Github Container Registry (ghcr.io)
+      if: ${{ github.event_name != 'pull_request' }}
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} ghcr.io
+      
+    - name: Push images to ghcr.io
+      if: ${{ github.event_name != 'pull_request' }}
+      run: docker push ${{ env.TAG_ICECAST }} ${{ env.TAG_LIQUIDSOAP }}
+
+    - name: Sign the published Docker image
+      if: ${{ github.event_name != 'pull_request' }}
+      env:
+        TAGS: |
+          ${{ env.TAG_ICECAST }}
+          ${{ env.TAG_LIQUIDSOAP }}
+        DIGEST: |
+          ${{ steps.build_icecast.outputs.digest }}
+          ${{ steps.build_liquidsoap.outputs.digest }}
+      # This step uses the identity token to provision an ephemeral certificate
+      # against the sigstore community Fulcio instance.
+      run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
