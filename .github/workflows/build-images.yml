@@ -27,10 +27,10 @@ jobs:
     
     - name: Build the Icecast image
       id: build_icecast
-      run: docker build -t ${{ env.TAG_ICECAST }} icecast/
+      run: docker build -t ${{ env.TAG_ICECAST }} icecast/ >> $GITHUB_OUTPUT
     - name: Build the Liquidsoap image
       id: build_liquidsoap
-      run: docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/
+      run: docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/ >> $GITHUB_OUTPUT
 
     - name: Login to Github Container Registry (ghcr.io)
       if: github.event_name != 'pull_request'
@@ -57,8 +57,8 @@ jobs:
           ${{ env.TAG_ICECAST }}
           ${{ env.TAG_LIQUIDSOAP }}
         DIGEST: |
-          ${{ steps.build_icecast.outputs.digest }}
-          ${{ steps.build_liquidsoap.outputs.digest }}
+          ${{ steps.build_icecast.outputs.* }}
+          ${{ steps.build_liquidsoap.outputs.* }}
       # This step uses the identity token to provision an ephemeral certificate
       # against the sigstore community Fulcio instance.
       run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
