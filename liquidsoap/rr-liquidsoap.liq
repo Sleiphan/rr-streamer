@@ -50,9 +50,12 @@ live = add([
 
 nattmusikk = playlist(PATH_NATTMUSIKK, mode="random")
 nattmusikk = switch([
-    ({7h-0h}, nattmusikk),
+    ({0h-7h}, nattmusikk),
     ({true}, blank())
 ], track_sensitive=false)
+
+# Normalize it to -14 LUFS
+nattmusikk = normalize(target=-14.0, lufs=true, up=6.0, down=0.1, nattmusikk)
 
 
 
