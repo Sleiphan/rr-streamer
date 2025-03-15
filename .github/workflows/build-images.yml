@@ -1,0 +1,43 @@
+name: Build Docker images
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  TAG_ICECAST: ghcr.io/sleiphan/rr-streamer/icecast:latest
+  TAG_LIQUIDSOAP: ghcr.io/sleiphan/rr-streamer/liquidsoap:latest
+
+jobs:
+  build:
+    name: Build and Push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build the Icecast image
+      id: build_icecast
+      run: docker build -t ${{ env.TAG_ICECAST }} icecast/
+    - name: Build the Liquidsoap image
+      id: build_liquidsoap
+      run: docker build -t ${{ env.TAG_LIQUIDSOAP }} liquidsoap/
+      
+    - name: Login to Github Container Registry (ghcr.io)
+      if: github.event_name != 'pull_request'
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} ghcr.io --password-stdin
+      
+    - name: Push images to ghcr.io
+      if: github.event_name != 'pull_request'
+      run: |
+        docker push ${{ env.TAG_ICECAST }}
+        docker push ${{ env.TAG_LIQUIDSOAP }}
