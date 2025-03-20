@@ -44,6 +44,9 @@ live = add([
     live_5
 ], normalize=false)
 
+# Mark the source as "blank" if the sound on the endpoints is so low that it is basically silent.
+live = strip_blank(max_blank=12., min_noise=0.3, threshold=-45., track_sensitive=false, live)
+
 
 
 # Third, setup royalty-free music to play at night
@@ -61,7 +64,6 @@ nattmusikk = normalize(target=-14.0, lufs=true, up=6.0, down=0.1, nattmusikk)
 
 # Fourth, mix in 'nattmusikk' to the stream as a fallback. This allows for the royalty-free music to
 # be overwritten by live broadcasts at night.
-
 live = fallback(track_sensitive=false, [live, nattmusikk])
 
 
