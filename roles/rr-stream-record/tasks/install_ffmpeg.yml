@@ -1,0 +1,10 @@
+- name: Install ffmpeg
+  package:
+    name: ffmpeg
+    state: present
+    update_cache: yes
+  when: ansible_facts['os_family'] != 'RedHat'
+
+- name: Install ffmpeg on RedHat systems
+  ansible.builtin.include_tasks: install_ffmpeg_redhat.yml
+  when: ansible_facts['os_family'] == 'RedHat'

@@ -1,0 +1,4 @@
+- hosts: stream_downloaders
+  become: yes
+  roles:
+    - rr-stream-record

@@ -1,0 +1,50 @@
+
+
+# Install and configure the web server.
+- name: Install web server (nginx)
+  package:
+    name: nginx
+    state: present
+
+- name: Deploy the nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf 
+  notify: Reload nginx
+
+
+
+# Install ffmpeg and copy in the stream recorder script.
+
+- name: Install ffmpeg
+  ansible.builtin.include_tasks: install_ffmpeg.yml
+
+- name: Deploy stream recording script
+  template:
+    src: record_stream.sh.j2
+    dest: /usr/local/bin/record_stream.sh
+    mode: '0755'
+
+
+
+# Install and deploy the systemd-managed service for executing the recording script.
+
+- name: Copy systemd service file
+  copy:
+    src: stream_recorder.service
+    dest: /etc/systemd/system/stream_recorder.service
+
+- name: Deploy systemd timer file
+  template:
+    src: stream_recorder.timer.j2
+    dest: /etc/systemd/system/stream_recorder.timer
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start timer
+  systemd:
+    name: stream_recorder.timer
+    enabled: yes
+    state: started

@@ -1,0 +1,37 @@
+- name: Gather OS facts
+  ansible.builtin.setup:
+    gather_subset:
+      - os_family
+      - distribution
+      - distribution_major_version
+
+- name: Set RHEL major version fact
+  ansible.builtin.set_fact:
+    rhel_major_version: "{{ ansible_facts['distribution_major_version'] }}"
+
+- name: Enable EPEL repository
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Ensure dnf config-manager is available (dnf-plugins-core)
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: present
+  when: ansible_facts['distribution'] == "AlmaLinux"
+
+- name: Enable CRB repository (required for ffmpeg)
+  ansible.builtin.command: dnf config-manager --set-enabled crb
+  when: ansible_facts['distribution'] == "AlmaLinux" and ansible_facts['distribution_major_version'] == "9"
+  changed_when: true
+
+- name: Install RPM Fusion Free repo
+  ansible.builtin.dnf:
+    name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ rhel_major_version }}.noarch.rpm"
+    state: present
+    disable_gpg_check: true
+
+- name: Install ffmpeg
+  ansible.builtin.dnf:
+    name: ffmpeg
+    state: present

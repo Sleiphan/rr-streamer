@@ -1,0 +1,9 @@
+[Unit]
+Description=Run stream recorder every {{ record_overlap }} seconds before the hour
+
+[Timer]
+OnCalendar={{ record_on_calendar }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

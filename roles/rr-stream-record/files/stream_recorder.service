@@ -1,0 +1,6 @@
+[Unit]
+Description=Stream Recorder Script
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/record_stream.sh
