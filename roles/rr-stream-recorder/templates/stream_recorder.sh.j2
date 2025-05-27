@@ -58,7 +58,7 @@ do
         "{{ content_path }}/$FILE_NAME" \
         &
 
-    Delete all records older than the defined buffer size
+    # Delete all records older than the defined buffer size
     find "{{ content_path }}" \
         -type f \
         -mmin +{{ circular_buffer_size }} \
