@@ -1,5 +1,6 @@
 server {
     listen {{ web_server_port }} default_server;
+    listen [::]:{{ web_server_port }} default_server;
     server_name _;
     
     root {{ content_path }};
