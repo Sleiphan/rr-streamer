@@ -1,3 +1,9 @@
+
+# Set time zone
+- name: Set time zone to that of SMIA (Europe/Oslo)
+  ansible.builtin.timezone:
+    name: Europe/Oslo
+
 # Install and configure the web server.
 - name: Install web server (nginx)
   package:
