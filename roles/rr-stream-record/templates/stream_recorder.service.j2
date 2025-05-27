@@ -1,0 +1,13 @@
+[Unit]
+Description=Stream Recorder Script
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart={{ recorder_script_destination }}
+User={{ record_script_user }}
+Group={{ record_script_user }}
+
+[Install]
+WantedBy=multi-user.target

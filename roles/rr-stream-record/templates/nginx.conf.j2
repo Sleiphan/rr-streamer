@@ -1,33 +1,15 @@
-user nginx;
-worker_processes auto;
-pid /run/nginx.pid;
-error_log /var/log/nginx/error.log;
-include /etc/nginx/modules-enabled/*.conf;
+server {
+    listen {{ web_server_port }} default_server;
+    server_name _;
+    
+    root {{ content_path }};
 
-events {
-    worker_connections 768;
-}
-
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-
-    access_log off;
-    error_log /var/log/nginx/error.log warn;
-
-    server {
-        listen {{ web_server_port }} default_server;
-        server_name _;
-
-        root {{ content_path }};
+    location / {
+        try_files $uri $uri/ =404;
         autoindex on;
-
-        location / {
-            index index.html;
-        }
-
-        location ~ /\. {
-            deny all;
-        }
+    }
+    
+    location ~ /\. {
+        deny all;
     }
 }

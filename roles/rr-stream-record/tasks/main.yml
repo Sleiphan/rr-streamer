@@ -1,15 +1,34 @@
-
-
 # Install and configure the web server.
 - name: Install web server (nginx)
   package:
     name: nginx
     state: present
 
+- name: Start and enable nginx service.
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started
+
+- name: Create a directory for the records
+  ansible.builtin.file:
+    path: '{{ content_path }}'
+    state: directory
+    mode: '0755'
+    owner: '{{ record_script_user }}'
+    group: '{{ record_script_user }}'
+    setype: httpd_sys_content_t
+
+- name: remove Debian's "sites-enabled/default" (so it doesn't fight our nginx config)
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: ansible_os_family == 'Debian'
+
 - name: Deploy the nginx configuration
   template:
     src: nginx.conf.j2
-    dest: /etc/nginx/nginx.conf 
+    dest: /etc/nginx/conf.d/serve_recordings.conf
   notify: Reload nginx
 
 
@@ -21,30 +40,27 @@
 
 - name: Deploy stream recording script
   template:
-    src: record_stream.sh.j2
-    dest: /usr/local/bin/record_stream.sh
+    src: stream_recorder.sh.j2
+    dest: '{{ recorder_script_destination }}'
     mode: '0755'
+    owner: '{{ record_script_user }}'
+    group: '{{ record_script_user }}'
 
 
 
 # Install and deploy the systemd-managed service for executing the recording script.
 
-- name: Copy systemd service file
-  copy:
-    src: stream_recorder.service
-    dest: /etc/systemd/system/stream_recorder.service
-
-- name: Deploy systemd timer file
+- name: Deploy systemd service file
   template:
-    src: stream_recorder.timer.j2
-    dest: /etc/systemd/system/stream_recorder.timer
+    src: stream_recorder.service.j2
+    dest: /etc/systemd/system/stream_recorder.service
 
 - name: Reload systemd
   systemd:
     daemon_reload: yes
 
-- name: Enable and start timer
+- name: Enable and start service
   systemd:
-    name: stream_recorder.timer
+    name: stream_recorder.service
     enabled: yes
     state: started

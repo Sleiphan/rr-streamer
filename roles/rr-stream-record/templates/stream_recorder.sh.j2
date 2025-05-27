@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# This script records the stream found at {{ on_air_stream_url }}.
+# The records are stored in {{ content_path }} and are one hour long each.
+# Records are deleted from {{ content_path }} if they are older than {{ circular_buffer_size }} minutes.
+
+# Note that the records overlap by {{ record_overlap }} seconds.
+# This means that each record starts recording {{ record_overlap }} seconds before the hour,
+# and records {{ record_overlap }} out into the next hour.
+
+# Each recording should cover one hour of the stream.
+CHUNCK_SIZE=3600 # seconds
+
+
+
+# First of all, we need to start recording as soon as the service starts up to make sure we don't miss anything.
+
+# Find the amount of time to sleep to reach the next recording time frame.
+recording_time=$(( $CHUNCK_SIZE - $(date +%s) % $CHUNCK_SIZE + {{ record_overlap }}))
+
+# Define filename
+FILE_NAME="$(date '+%Y %b %d %H:%M:%S').mp3"
+
+# Start a recording now in the background
+ffmpeg \
+    -i {{ on_air_stream_url }} \
+    -t $recording_time \
+    -f mp3 \
+    -ab 128k \
+    "{{ content_path }}/$FILE_NAME" \
+    &
+
+
+
+# Enter the main loop of the service
+while :
+do
+    # Find the amount of time to sleep to reach the next recording time frame.
+    sleep_time=$(( $CHUNCK_SIZE - $(date +%s) % $CHUNCK_SIZE - {{ record_overlap }}))
+
+    # If the timing window for the current hour has passed, wait until the next one.
+    if [ "$sleep_time" -lt 1 ]; then
+        sleep_time=$(($sleep_time + $CHUNCK_SIZE))
+    fi
+
+    # Wait for next recording to begin
+    sleep "$sleep_time"
+
+    # Define filename
+    FILE_NAME="$(date -d 'next hour' '+%Y %b %d %H:00').mp3"
+
+    # Start a recording now in the background
+    ffmpeg \
+        -i {{ on_air_stream_url }} \
+        -t $(($CHUNCK_SIZE + {{ record_overlap }} * 2)) \
+        -f mp3 \
+        -ab 128k \
+        "{{ content_path }}/$FILE_NAME" \
+        &
+
+    Delete all records older than the defined buffer size
+    find "{{ content_path }}" \
+        -type f \
+        -mmin +{{ circular_buffer_size }} \
+        -delete
+done

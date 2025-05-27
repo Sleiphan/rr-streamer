@@ -1,18 +1,20 @@
 # The port that that users connect to for downloading the stream.
 web_server_port: 80
 
-# The stream that should be recorded and stored
-on_air_stream_url: "http://direkte.radiorevolt.no/revolt.aac"
+# The stream that should be recorded and stored.
+on_air_stream_url: 'http://direkte.radiorevolt.no/revolt.aac'
 
 # The path where the stream record should be stored.
-content_path: "/records"
+content_path: '/records'
+
+# The path that the recording script should be put.
+recorder_script_destination: '/usr/local/bin/stream_recorder.sh'
+
+# The user that will execute the record script and be set as the owner of the content_path and all records within.
+record_script_user: 'almalinux'
 
 # How far back in time the records should cover, measured in minutes.
 circular_buffer_size: 89280 # 62 days in minutes (62 * 24 * 60).
 
 # The amount of time to record outside the record time frame, in seconds.
 record_overlap: 120 # 2 minutes in seconds.
-
-# Calculated variables based on the value of the variables above.
-record_trigger_time: "{{ '%02d:%02d' | format((60 - (record_overlap | int) // 60) % 60, (60 - (record_overlap | int) % 60) % 60) }}"
-record_on_calendar: "*-*-* *:{{ record_trigger_time }}"
